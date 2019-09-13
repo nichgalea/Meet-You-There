@@ -1,0 +1,62 @@
+@import "./colors";
+
+@mixin tablet() {
+  @media screen and (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin small-phone() {
+  @media screen and (max-width: 340px) {
+    @content;
+  }
+}
+
+@mixin large-phone() {
+  @media screen and (max-width: 425px) {
+    @content;
+  }
+}
+
+@mixin button($outline: false) {
+  padding: 8px;
+  border-radius: 32px;
+  padding: 12px 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  width: 400px;
+  cursor: pointer;
+  transition: background 100ms ease;
+  margin-bottom: 8px;
+
+  @if $outline {
+    background: transparent;
+    border: 1px solid rgba($primary, 0.8);
+    color: $primary;
+  } @else {
+    box-shadow: 1px 2px 5px 0px rgba(0, 0, 0, 0.5);
+    background: rgba($primary, 0.8);
+    border: 0;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: rgba($primary, 0.5);
+    box-shadow: none;
+  }
+
+  &:hover {
+    &:not(:disabled) {
+      background: rgba($primary, 0.8);
+    }
+
+    @if $outline {
+      color: white;
+    }
+  }
+
+  @include tablet() {
+    width: 70%;
+  }
+}
