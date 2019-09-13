@@ -1,6 +1,10 @@
 {
   "name": "meet-you-there",
   "version": "0.1.0",
+  "author": {
+    "url": "https://github.com/nichgalea",
+    "name": "Nicholas Galea"
+  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
