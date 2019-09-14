@@ -1,166 +1,145 @@
 <template>
   <div>
-    <p>Find cafés and bars that are close to you and your friend!</p>
+    <p>Start by typing where you are, can be a street address, town, city or even a GPS coordinate.</p>
 
     <p>
-      Start by putting in your location, like the name of a city, town or even a GPS coordinate (e.g.
-      <span
-        class="example"
-      >'Amsterdam'</span> or
-      <span class="example">'52.3790203,4.8984654'</span>).
+      e.g.
+      <b>'Vondelpark, Amsterdam'</b> /
+      <b>'Valletta, Malta'</b> /
+      <b>'52.3578866, 4.8671167'</b>
     </p>
 
     <p>
-      Then hit
+      Then just press
       <b>Enter &crarr;</b>
     </p>
 
     <div class="input-section">
       <form @submit.prevent="submit">
-        <Textfield v-model="location" placeholder="Where are you right now?" />
+        <Textfield
+          ref="textfield"
+          placeholder="Where are you right now?"
+          v-model="locationName"
+          @keyup="setLocationA(null)"
+        />
       </form>
 
       <p class="or">OR</p>
 
-      <button :disabled="isButtonDisabled" @click="findLocation">{{buttonText}}</button>
+      <div class="btn-container">
+        <button
+          :disabled="isLoading"
+          @click="getCurrentUserLocation"
+        >{{ isLoading ? "Checking..." : "Find me!" }}</button>
+      </div>
 
-      <template v-if="findLocationFailed">
-        <p class="error">Sorry, we really tried to get your location, but couldn't!</p>
-        <p class="error">Are location permissions allowed on this site?</p>
-      </template>
+      <div class="btn-container">
+        <button ref="continueButton" :disabled="!locationA" @click="$emit('next')">Continue</button>
+      </div>
 
-      <template v-if="requestError">
-        <p class="error">{{requestError}}</p>
-      </template>
+      <p v-if="error" class="error">{{error}}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import { mapActions } from "vuex";
-import venueService, { VENUE_SERVICE_ERROR } from "@/services/venue.service";
-import * as Foursquare from "@/models/foursquare";
+import { Vue, Component, Ref } from "vue-property-decorator";
+import { mapActions, mapState } from "vuex";
+import * as Location from "@/models/location";
+import locationService from "@/services/location.service";
 import Textfield from "./Textfield.vue";
 
 @Component({
   components: {
     Textfield
   },
-  methods: {
-    ...mapActions(["setVenuesA"])
-  }
+  computed: mapState(["locationA"]),
+  methods: mapActions(["setLocationA"])
 })
 export default class StepOne extends Vue {
-  location = "";
-  findLocationFailed = false;
-  requestError = "";
-  loading = "";
-  success = "";
-  buttonDefaultText = "Find my location automatically!";
+  @Ref() readonly textfield!: Textfield;
+  @Ref() readonly continueButton!: HTMLButtonElement;
+  locationName = "";
+  error = "";
+  isLoading = false;
+  setLocationA!: (coords: Location.Coordinates | null) => void;
 
-  setVenuesA!: (venues: Foursquare.Venue[]) => void;
-
-  get buttonText(): string {
-    if (this.success) return this.success;
-
-    if (this.loading) return this.loading;
-
-    return this.buttonDefaultText;
-  }
-
-  get isButtonDisabled(): boolean {
-    return Boolean(this.loading || this.success) || false;
-  }
-
-  async findLocation() {
+  async getCurrentUserLocation() {
     try {
-      this.loading = "Trying to find where you are...";
+      this.error = "";
+      this.isLoading = true;
 
-      this.location = await venueService.getCurrentLocation();
-
-      this.findLocationFailed = false;
-
-      this.submit();
-    } catch (error) {
-      this.findLocationFailed = true;
-
-      console.error(`ERR :: ${VENUE_SERVICE_ERROR[error]}`);
+      const coords = await locationService.getCurrentLocationCoordinates();
+      this.locationName = await locationService.getLocationNameByCoordinates(
+        coords
+      );
+      this.setLocationA(coords);
+    } catch {
+      this.error =
+        "Sorry! We couldn't get your location... Are location permissions enabled on this site?";
     } finally {
-      this.loading = "";
+      this.isLoading = false;
     }
   }
 
   async submit() {
-    const trimmedLocation = this.location.trim();
+    try {
+      if (this.locationName.trim()) {
+        this.error = "";
+        this.isLoading = true;
 
-    if (trimmedLocation.length > 0) {
-      try {
-        if (!this.loading) {
-          this.loading = "Checking...";
+        if (locationService.checkIsCoordinates(this.locationName)) {
+          const coords = locationService.convertStrintToCoordinates(
+            this.locationName
+          );
+          this.setLocationA(coords);
+        } else {
+          const coords = await locationService.getCoordinatesByLocationName(
+            this.locationName
+          );
+
+          this.setLocationA(coords);
         }
 
-        const venues = await this.getVenues(trimmedLocation);
-        this.success = "We got it!";
-        this.setVenuesA(venues);
-        this.findLocationFailed = false;
-        this.loading = this.requestError = "";
-
-        setTimeout(() => {
-          this.$emit("next");
-
-          // don't clear success message until the slide has moved
-          setTimeout(() => (this.success = ""), 600);
-        }, 500); // just enough time to notice the success status
-      } catch (e) {
-        this.loading = "";
-
-        const isFailedGeoCode =
-          (e as Foursquare.Error).meta.errorType === "failed_geocode";
-
-        this.requestError = isFailedGeoCode
-          ? `Couldn't find specific location with the query "${trimmedLocation}"`
-          : "Sorry, something went wrong while trying to request the venues!";
+        this.textfield.input.blur();
+        this.continueButton.focus();
+        this.continueButton.scrollIntoView({
+          behavior: "smooth"
+        });
       }
+    } catch (e) {
+      this.setLocationA(null);
+      this.error = `Sorry! We couldn't find any location with the query '${this.locationName.trim()}'!`;
+    } finally {
+      this.isLoading = false;
     }
-  }
-
-  async getVenues(location: string): Promise<Foursquare.Venue[]> {
-    const result = await venueService.getSuggestedVenuesByLocation(location);
-    return result.response.groups[0].items.map(i => i.venue);
   }
 }
 </script>
 
 <style scoped lang="scss">
 @import "@/styles/mixins";
-@import "@/styles/colors";
-
-.example {
-  font-weight: bold;
-}
 
 .input-section {
-  margin-top: 40px;
+  margin-top: 16px;
+}
+
+.btn-container {
+  margin-top: 16px;
 }
 
 button {
   @include button();
 }
 
-p {
-  &:first-child {
-    margin-top: 0;
-  }
+.error {
+  font-size: 14px;
+  font-weight: 500;
+  color: crimson;
+}
 
-  &.error {
-    font-size: 14px;
-    color: crimson;
-  }
-
-  &.or {
-    letter-spacing: 2px;
-    font-weight: 500;
-  }
+.or {
+  letter-spacing: 2px;
+  font-weight: 500;
 }
 </style>

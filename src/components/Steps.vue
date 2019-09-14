@@ -9,7 +9,9 @@
         <StepTwo @previous="previous" @next="next" />
       </div>
 
-      <div class="step" :style="{ width: `${width}px` }">3</div>
+      <div class="step" :style="{ width: `${width}px` }">
+        <StepThree @previous="previous" @reset="reset" />
+      </div>
     </div>
   </div>
 </template>
@@ -18,11 +20,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import StepOne from "./StepOne.vue";
 import StepTwo from "./StepTwo.vue";
+import StepThree from "./StepThree.vue";
 
 @Component({
   components: {
     StepOne,
-    StepTwo
+    StepTwo,
+    StepThree
   }
 })
 export default class Steps extends Vue {
@@ -82,5 +86,7 @@ export default class Steps extends Vue {
   white-space: normal;
   padding: 8px;
   vertical-align: top;
+  max-height: 85vh;
+  overflow: auto;
 }
 </style>

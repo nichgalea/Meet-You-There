@@ -25,10 +25,6 @@ export default class App extends Vue {}
 <style lang="scss">
 @import "@/styles/colors";
 
-* {
-  outline: none;
-}
-
 body {
   margin: 0;
 }

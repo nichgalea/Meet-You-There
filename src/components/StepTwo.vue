@@ -1,104 +1,112 @@
 <template>
   <div>
+    <p>Next, just put in where your friend is right now.</p>
     <p>
-      Next, put in where your friend is right now, e.g.
-      <span class="example">'Utrecht'</span> or
-      <span class="example">'52.0842715,5.0124519'</span>
-    </p>
-
-    <p>
-      Then hit
+      Then just press
       <b>Enter &crarr;</b>
     </p>
 
+    <p>Same as before: cities, towns, addresses, GPS locations are accepted.</p>
+
     <div class="input-section">
       <form @submit.prevent="submit">
-        <Textfield v-model="location" placeholder="Where is your friend?" />
+        <Textfield
+          v-model="locationName"
+          placeholder="Where's your friend right now?"
+          @keyup="setLocationB(null)"
+        />
       </form>
-
-      <button @click="$emit('previous')">Back to my location</button>
-
-      <p v-if="status">{{status}}</p>
     </div>
+
+    <div class="btn-container">
+      <button class="btn-previous" @click="$emit('previous')">Back to my location</button>
+    </div>
+
+    <div class="btn-container">
+      <button
+        class="btn-next"
+        :disabled="!locationB"
+        @click="$emit('next')"
+      >{{isLoading ? "Loading" : "Show me venues!" }}</button>
+    </div>
+
+    <p v-if="error" class="error">{{error}}</p>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { mapActions } from "vuex";
-import venueService from "@/services/venue.service";
-import * as Foursquare from "@/models/foursquare";
+import { mapState, mapActions } from "vuex";
+import locationService from "@/services/location.service";
+import * as Location from "@/models/location";
 import Textfield from "./Textfield.vue";
 
 @Component({
-  components: { Textfield },
-  methods: {
-    ...mapActions(["setVenuesB"])
-  }
+  components: {
+    Textfield
+  },
+  computed: mapState(["locationB"]),
+  methods: mapActions(["setLocationB"])
 })
 export default class StepTwo extends Vue {
-  location = "";
-  loading = "";
-  status = "";
-  setVenuesB!: (venues: Foursquare.Venue[]) => void;
+  locationName = "";
+  isLoading = false;
+  error = "";
+  setLocationB!: (coords: Location.Coordinates | null) => void;
 
   async submit() {
-    const trimmedLocation = this.location.trim();
+    try {
+      if (this.locationName.trim()) {
+        this.error = "";
+        this.isLoading = true;
 
-    if (trimmedLocation.length > 0) {
-      try {
-        this.status = "Checking...";
-        const venues = await this.getVenues(trimmedLocation);
-        this.status = "Got it!";
-        this.setVenuesB(venues);
-        this.$emit("next");
-        setTimeout(() => (this.status = ""), 600);
-      } catch (e) {
-        const isFailedGeoCode =
-          (e as Foursquare.Error).meta.errorType === "failed_geocode";
+        if (locationService.checkIsCoordinates(this.locationName)) {
+          const coords = locationService.convertStrintToCoordinates(
+            this.locationName
+          );
+          this.setLocationB(coords);
+        } else {
+          const coords = await locationService.getCoordinatesByLocationName(
+            this.locationName
+          );
 
-        this.status = isFailedGeoCode
-          ? `Couldn't find specific location with the query "${trimmedLocation}"`
-          : "Sorry, something went wrong while trying to request the venues!";
-      } finally {
-        this.loading = "";
+          this.setLocationB(coords);
+        }
       }
+    } catch {
+      this.setLocationB(null);
+      this.error = `Sorry! We couldn't find any location with the query '${this.locationName.trim()}'!`;
+    } finally {
+      this.isLoading = false;
     }
-  }
-
-  async getVenues(location: string): Promise<Foursquare.Venue[]> {
-    const result = await venueService.getSuggestedVenuesByLocation(location);
-    return result.response.groups[0].items.map(i => i.venue);
   }
 }
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/colors";
 @import "@/styles/mixins";
 
-.example {
-  font-weight: bold;
+.input-section {
+  margin-top: 16px;
+}
+
+.btn-container {
+  margin-top: 16px;
 }
 
 button {
-  margin-top: 16px;
-  @include button($outline: true);
+  &.btn-next {
+    @include button();
+  }
+
+  &.btn-previous {
+    @include button($outline: true);
+  }
 }
 
-p {
-  &:first-child {
-    margin-top: 0;
-  }
-
-  &.error {
-    font-size: 14px;
-    color: crimson;
-  }
-
-  &.or {
-    letter-spacing: 2px;
-    font-weight: 500;
-  }
+.error {
+  font-size: 14px;
+  font-weight: 500;
+  color: crimson;
 }
 </style>

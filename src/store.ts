@@ -1,40 +1,33 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import * as Foursquare from "@/models/foursquare";
+import * as Location from "@/models/location";
 
 Vue.use(Vuex);
 
 interface State {
-  venuesA: Foursquare.Venue[];
-  venuesB: Foursquare.Venue[];
+  locationA: Location.Coordinates | null;
+  locationB: Location.Coordinates | null;
 }
 
 export default new Vuex.Store<State>({
   state: {
-    venuesA: [],
-    venuesB: []
+    locationA: null,
+    locationB: null
   },
   mutations: {
-    clearVenues(state) {
-      state.venuesA = [];
-      state.venuesB = [];
+    setLocationA(state, location: Location.Coordinates) {
+      state.locationA = location;
     },
-    setVenuesA(state, venues: Foursquare.Venue[]) {
-      state.venuesA = venues;
-    },
-    setVenuesB(state, venues: Foursquare.Venue[]) {
-      state.venuesB = venues;
+    setLocationB(state, location: Location.Coordinates) {
+      state.locationB = location;
     }
   },
   actions: {
-    clearVenues(context) {
-      context.commit("clearVenues");
+    setLocationA(context, location: Location.Coordinates) {
+      context.commit("setLocationA", location);
     },
-    setVenuesA(context, venues: Foursquare.Venue[]) {
-      context.commit("setVenuesA", venues);
-    },
-    setVenuesB(context, venues: Foursquare.Venue[]) {
-      context.commit("setVenuesB", venues);
+    setLocationB(context, location: Location.Coordinates) {
+      context.commit("setLocationB", location);
     }
   }
 });

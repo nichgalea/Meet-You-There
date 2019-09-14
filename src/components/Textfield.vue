@@ -1,11 +1,13 @@
 <template>
   <div :class="{ root: true, focus }">
     <input
+      ref="input"
       type="search"
       autocomplete="off"
       @focus="focus = true"
       @blur="focus = false"
       @input="$emit('input', $event.target.value)"
+      @keyup="$emit('keyup')"
       :value="value"
     />
 
@@ -14,12 +16,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Ref } from "vue-property-decorator";
 
 @Component
 export default class Textfield extends Vue {
   @Prop() value!: string;
   @Prop() placeholder!: string;
+  @Ref() readonly input!: HTMLInputElement;
 
   focus = false;
 }
