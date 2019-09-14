@@ -16,12 +16,7 @@
 
     <div class="input-section">
       <form @submit.prevent="submit">
-        <Textfield
-          ref="textfield"
-          placeholder="Where are you right now?"
-          v-model="locationName"
-          @keyup="setLocationA(null)"
-        />
+        <Textfield ref="textfield" placeholder="Where are you right now?" v-model="locationName" />
       </form>
 
       <p class="or">OR</p>
@@ -74,6 +69,11 @@ export default class StepOne extends Vue {
         coords
       );
       this.setLocationA(coords);
+
+      this.continueButton.focus();
+      this.continueButton.scrollIntoView({
+        behavior: "smooth"
+      });
     } catch {
       this.error =
         "Sorry! We couldn't get your location... Are location permissions enabled on this site?";
