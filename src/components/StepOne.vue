@@ -107,7 +107,7 @@ export default class StepOne extends Vue {
         this.loading = this.requestError = "";
 
         setTimeout(() => {
-          this.$emit("finish");
+          this.$emit("next");
 
           // don't clear success message until the slide has moved
           setTimeout(() => (this.success = ""), 600);

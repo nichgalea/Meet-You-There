@@ -2,10 +2,12 @@
   <div class="steps">
     <div class="steps-carousel" :style="{transform: `translate(-${step * (width)}px)`}">
       <div class="step" :style="{ width: `${width}px` }">
-        <StepOne @finish="next" />
+        <StepOne @next="next" />
       </div>
 
-      <div class="step" :style="{ width: `${width}px` }">2</div>
+      <div class="step" :style="{ width: `${width}px` }">
+        <StepTwo @previous="previous" @next="next" />
+      </div>
 
       <div class="step" :style="{ width: `${width}px` }">3</div>
     </div>
@@ -15,10 +17,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import StepOne from "./StepOne.vue";
+import StepTwo from "./StepTwo.vue";
 
 @Component({
   components: {
-    StepOne
+    StepOne,
+    StepTwo
   }
 })
 export default class Steps extends Vue {
@@ -49,6 +53,10 @@ export default class Steps extends Vue {
       this.step--;
     }
   }
+
+  reset() {
+    this.step = 0;
+  }
 }
 </script>
 
@@ -73,5 +81,6 @@ export default class Steps extends Vue {
   box-sizing: border-box;
   white-space: normal;
   padding: 8px;
+  vertical-align: top;
 }
 </style>
