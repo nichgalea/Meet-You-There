@@ -1,5 +1,7 @@
 <template>
   <div class="step-3">
+    <p class="error">{{error}}</p>
+
     <template v-if="results.length > 0">
       <table>
         <thead>
@@ -29,8 +31,6 @@
     <div>
       <button @click="$emit('reset')">Start over</button>
     </div>
-
-    <p class="error">{{error}}</p>
   </div>
 </template>
 
@@ -71,6 +71,8 @@ export default class StepThree extends Vue {
 
   async computeVenues() {
     try {
+      this.error = "";
+
       const midpointLocation = locationService.getMidpointCoordinateBetweenTwo(
         this.locationA!,
         this.locationB!
@@ -82,8 +84,10 @@ export default class StepThree extends Vue {
 
       this.results = result.response.groups[0].items.map(i => i.venue);
 
-      if (this.results.length === 0)
-        this.error = "Sorry, we couldn't find anything!";
+      if (this.results.length === 0) {
+        this.error =
+          "Sorry, we couldn't find anything with the given locations! Is the distance maybe too large?";
+      }
     } catch (e) {
       this.error =
         "Oops! Something went wrong when trying to fetch your results!";
@@ -120,6 +124,10 @@ button {
   @include button();
 
   margin-top: 16px;
+
+  &:last-of-type {
+    margin-bottom: 8px;
+  }
 }
 
 .error {
