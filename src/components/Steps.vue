@@ -18,9 +18,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import * as history from "history";
 import StepOne from "./StepOne.vue";
 import StepTwo from "./StepTwo.vue";
 import StepThree from "./StepThree.vue";
+
+const browserHistory = history.createBrowserHistory();
 
 @Component({
   components: {
@@ -33,9 +36,18 @@ export default class Steps extends Vue {
   step = 0;
   width = 0;
 
+  handleHistoryChange(location: history.Location) {
+    if (typeof location.state === "number") {
+      this.step = location.state;
+    } else {
+      this.step = 0;
+    }
+  }
+
   mounted() {
     this.setWidth();
     window.addEventListener("resize", this.setWidth);
+    browserHistory.listen(this.handleHistoryChange);
   }
 
   destroyed() {
@@ -48,18 +60,18 @@ export default class Steps extends Vue {
 
   next() {
     if (this.step < 2) {
-      this.step++;
+      browserHistory.push("", this.step + 1);
     }
   }
 
   previous() {
     if (this.step >= 0) {
-      this.step--;
+      browserHistory.push("", this.step - 1);
     }
   }
 
   reset() {
-    this.step = 0;
+    browserHistory.push("", 0);
   }
 }
 </script>
