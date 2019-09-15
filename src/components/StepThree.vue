@@ -86,7 +86,7 @@ export default class StepThree extends Vue {
 
       if (this.results.length === 0) {
         this.error =
-          "Sorry, we couldn't find anything with the given locations! Is the distance maybe too large?";
+          "Sorry, we couldn't find anything with the given locations! Is the distance maybe too large? We won't find venues over large areas of sea or ocean! :/";
       }
     } catch (e) {
       this.error =
