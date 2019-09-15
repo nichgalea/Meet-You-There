@@ -14,7 +14,7 @@ Initially I found this solution:
 
 However, the math isn't that straightforward, even though I can still convert it to JS.
 
-With a bit of effort I managed to find this library: https://github.com/Turfjs/turf. Which seems to have decent support relatively recent activity. Through its documentation it seems quite straightforward to use, at least for my needs for sure.
+With a bit of effort I managed to find this library: https://github.com/Turfjs/turf. Which seems to have decent support and relatively recent activity. Through its documentation it seems quite straightforward to use, at least for my needs for sure.
 
 ## Project setup
 
