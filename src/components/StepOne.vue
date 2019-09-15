@@ -1,6 +1,8 @@
 <template>
   <div>
-    <p>Start by typing where you are, can be a street address, town, city or even a GPS coordinate.</p>
+    <p>Find places for drinks between you and your friend's location!</p>
+
+    <p>Start by typing where you are, can be a town, city or even a GPS coordinate.</p>
 
     <p>
       e.g.
@@ -91,9 +93,6 @@ export default class StepOne extends Vue {
         if (locationService.checkIsCoordinates(this.locationName)) {
           const coords = locationService.convertStrintToCoordinates(
             this.locationName
-          );
-          this.locationName = await locationService.getLocationNameByCoordinates(
-            coords
           );
           this.setLocationA(coords);
         } else {

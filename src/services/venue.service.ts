@@ -9,7 +9,7 @@ export class VenueService {
     url.searchParams.append("client_id", process.env.VUE_APP_FOURSQUARE_ID);
     url.searchParams.append("client_secret", process.env.VUE_APP_FOURSQUARE_SECRET);
     url.searchParams.append("ll", `${coords.latitude},${coords.longitude}`);
-    url.searchParams.append("section", "drinks,coffee");
+    url.searchParams.append("section", "drinks");
     url.searchParams.append("sortByDistance", "1");
     url.searchParams.append("v", "20190913");
 
