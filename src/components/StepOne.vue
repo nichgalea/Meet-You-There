@@ -92,6 +92,9 @@ export default class StepOne extends Vue {
           const coords = locationService.convertStrintToCoordinates(
             this.locationName
           );
+          this.locationName = await locationService.getLocationNameByCoordinates(
+            coords
+          );
           this.setLocationA(coords);
         } else {
           const coords = await locationService.getCoordinatesByLocationName(

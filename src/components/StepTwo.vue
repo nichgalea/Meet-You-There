@@ -72,6 +72,9 @@ export default class StepTwo extends Vue {
           const coords = await locationService.getCoordinatesByLocationName(
             this.locationName
           );
+          this.locationName = await locationService.getLocationNameByCoordinates(
+            coords
+          );
 
           this.setLocationB(coords);
         }
