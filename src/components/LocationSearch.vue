@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import * as Opencage from "@/models/opencage";
+import * as OpenCage from "@/models/opencage";
 import MyLocation from "./MyLocation.vue";
 import FriendsLocation from "./FriendsLocation.vue";
 
@@ -17,9 +17,9 @@ import FriendsLocation from "./FriendsLocation.vue";
   components: { MyLocation, FriendsLocation }
 })
 export default class LocationSearch extends Vue {
-  results: Opencage.Result[] | null = null;
-  myCurrentLocation: Opencage.Result | null = null;
-  friendCurrentLocation: Opencage.Result | null = null;
+  results: OpenCage.Result[] | null = null;
+  myCurrentLocation: OpenCage.Result | null = null;
+  friendCurrentLocation: OpenCage.Result | null = null;
 }
 </script>
 

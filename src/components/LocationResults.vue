@@ -6,8 +6,6 @@
         <h2>Multiple Location Results</h2>
 
         <p>We found a couple of places for that query. Can you pick the one that makes most sense for you?</p>
-
-        <p>Click on the addresses to see where they are on Google Maps.</p>
       </div>
 
       <div class="table-section">
@@ -31,10 +29,6 @@ import * as OpenCage from "@/models/opencage";
 @Component
 export default class ResultsModal extends Vue {
   @Prop() results!: OpenCage.Result[];
-
-  mounted() {
-    console.log(this.results[0]);
-  }
 }
 </script>
 

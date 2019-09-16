@@ -20,7 +20,7 @@
       <br />
       <b>{{`${currentLocation.formatted} ${currentLocation.annotations.flag || ""}`}}</b>
     </p>
-    <p v-else>We don't have your location yet...</p>
+    <p v-else class="current-location">We don't have your location yet...</p>
 
     <button class="find-me" @click="findCurrentCoordinates">Find Me!</button>
 
@@ -30,15 +30,15 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import * as Opencage from "@/models/opencage";
 import locationService from "@/services/location.service";
+import * as OpenCage from "@/models/opencage";
 import Searchfield from "./Searchfield.vue";
 import LocationResults from "./LocationResults.vue";
 
 @Component({ components: { Searchfield, LocationResults } })
 export default class MyLocation extends Vue {
-  currentLocation: Opencage.Result | null = null;
-  results: Opencage.Result[] | null = null;
+  currentLocation: OpenCage.Result | null = null;
+  results: OpenCage.Result[] | null = null;
   value = "";
   error = "";
   loading = false;
@@ -95,7 +95,7 @@ export default class MyLocation extends Vue {
     }
   }
 
-  handleResultsClose(selectedLocation?: Opencage.Result) {
+  handleResultsClose(selectedLocation?: OpenCage.Result) {
     if (selectedLocation) {
       this.currentLocation = selectedLocation;
       this.$emit("result", selectedLocation);
