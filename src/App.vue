@@ -1,22 +1,16 @@
 <template>
   <div id="app">
-    <Header />
-
-    <main>
-      <Steps />
-    </main>
+    <Main />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Header from "./components/Header.vue";
-import Steps from "./components/Steps.vue";
+import Main from "./components/Main.vue";
 
 @Component({
   components: {
-    Header,
-    Steps
+    Main
   }
 })
 export default class App extends Vue {}
@@ -25,20 +19,18 @@ export default class App extends Vue {}
 <style lang="scss">
 @import "@/styles/colors";
 
-body {
-  margin: 0;
+* {
+  outline: none;
 }
 
-main {
-  box-sizing: border-box;
-  height: 85vh;
+body {
+  margin: 0;
 }
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: $primary;
+  color: $text-primary;
 }
 </style>

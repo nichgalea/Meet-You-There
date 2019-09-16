@@ -10,4 +10,9 @@ declare global {
       [elem: string]: any;
     }
   }
+
+  // based on: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
+  interface Navigator {
+    share?: (data: { url?: string; text?: string; title?: string }) => Promise<void>;
+  }
 }
