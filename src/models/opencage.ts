@@ -62,8 +62,10 @@ export interface Northeast {
 }
 
 export interface Annotations {
+  FIPS?: FIPS;
   DMS: DMS;
   MGRS: string;
+  wikidata?: string;
   Maidenhead: string;
   Mercator: Mercator;
   OSM: OSM;
@@ -105,7 +107,7 @@ export interface Rise {
 
 export interface Roadinfo {
   drive_on: string;
-  road: string;
+  road?: string;
   speed_in: string;
 }
 
@@ -122,18 +124,12 @@ export interface Currency {
   symbol: string;
   symbol_first: number;
   thousands_separator: string;
+  disambiguate_symbol?: string;
 }
 
 export interface UNM49 {
-  regions: Regions;
+  regions: Record<string, string>;
   statistical_groupings: string[];
-}
-
-export interface Regions {
-  EUROPE: string;
-  NL: string;
-  WESTERN_EUROPE: string;
-  WORLD: string;
 }
 
 export interface OSM {
@@ -149,6 +145,11 @@ export interface Mercator {
 export interface DMS {
   lat: string;
   lng: string;
+}
+
+export interface FIPS {
+  county: string;
+  state: string;
 }
 
 export interface Rate {
