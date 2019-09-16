@@ -1,5 +1,6 @@
 import * as Foursquare from "@/models/foursquare";
 import * as Location from "@/models/location";
+import httpService from "@/services/http.service";
 
 const FOURSQUARE_API_URL = "https://api.foursquare.com";
 
@@ -13,13 +14,7 @@ export class VenueService {
     url.searchParams.append("sortByDistance", "1");
     url.searchParams.append("v", "20190913");
 
-    const response = await fetch(url.toString());
-
-    if (response.ok) {
-      return await response.json();
-    }
-
-    throw await response.json();
+    return httpService.get<Foursquare.Recommendation>(url.toString());
   }
 }
 

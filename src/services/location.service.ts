@@ -1,11 +1,11 @@
 import * as turf from "@turf/turf";
 import * as Location from "@/models/location";
 import * as OpenCage from "@/models/opencage";
+import httpService from "./http.service";
 
 export enum LocationServiceError {
   GEO_LOCATION_UNSUPPORTED,
-  GEO_LOCATION_TIMEOUT,
-  GEO_LOOKUP_NO_RESULTS
+  GEO_LOCATION_TIMEOUT
 }
 const OPEN_CAGE_URL = "https://api.opencagedata.com/";
 
@@ -16,12 +16,10 @@ export class LocationService {
     return new Promise<Location.Coordinates>((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(position => {
         resolve({ longitude: position.coords.longitude, latitude: position.coords.latitude });
-        // if current position unresolved within 5 seconds, reject promise
       });
 
-      setTimeout(() => {
-        reject(LocationServiceError.GEO_LOCATION_TIMEOUT);
-      }, 5000);
+      // if current position unresolved within 5 seconds, reject promise
+      setTimeout(() => reject(LocationServiceError.GEO_LOCATION_TIMEOUT), 5000);
     });
   }
 
@@ -34,49 +32,22 @@ export class LocationService {
     return { longitude, latitude };
   }
 
-  async getLocationNameByCoordinates(coord: Location.Coordinates): Promise<string> {
+  async getLocationNameByCoordinates(coord: Location.Coordinates): Promise<OpenCage.Result[]> {
     const url = new URL(`${OPEN_CAGE_URL}/geocode/v1/json`);
     url.searchParams.append("q", `${coord.latitude},${coord.longitude}`);
     url.searchParams.append("key", process.env.VUE_APP_OPEN_CAGE_API_SECRET);
     url.searchParams.append("language", "en");
 
-    const response = await fetch(url.toString());
-
-    if (response.ok) {
-      const lookupResponse: OpenCage.LookupResponse = await response.json();
-
-      if (lookupResponse.results.length === 0) throw LocationServiceError.GEO_LOOKUP_NO_RESULTS;
-
-      return lookupResponse.results[0].formatted;
-    }
-
-    throw await response.json();
+    return httpService.get<OpenCage.Result[]>(url.toString());
   }
 
-  async getCoordinatesByLocationName(name: string): Promise<Location.Coordinates> {
+  async getCoordinatesByLocationName(name: string): Promise<OpenCage.Result[]> {
     const url = new URL(`${OPEN_CAGE_URL}/geocode/v1/json`);
     url.searchParams.append("q", name);
     url.searchParams.append("key", process.env.VUE_APP_OPEN_CAGE_API_SECRET);
     url.searchParams.append("language", "en");
 
-    const response = await fetch(url.toString());
-
-    if (response.ok) {
-      const lookupResponse: OpenCage.LookupResponse = await response.json();
-
-      if (lookupResponse.results.length === 0) throw LocationServiceError.GEO_LOOKUP_NO_RESULTS;
-
-      const {
-        geometry: { lat, lng }
-      } = lookupResponse.results[0];
-
-      return {
-        latitude: lat,
-        longitude: lng
-      } as Location.Coordinates;
-    }
-
-    throw await response.json();
+    return httpService.get<OpenCage.Result[]>(url.toString());
   }
 
   checkIsCoordinates(input: string): boolean {
