@@ -1,16 +1,15 @@
 <template>
   <main>
     <div class="info-section">
-      <header>
-        <h1>MeetYouThere!</h1>
+      <h1>MeetYouThere!</h1>
 
-        <p>Find places for drinks between you and your friend's location!</p>
+      <p>Find places for drinks between you and your friend's location!</p>
 
-        <p>Search by address, landmark or even GPS coordinates!</p>
+      <p>Search by address, landmark or even GPS coordinates.</p>
 
-        <NativeShare v-if="hasNativeShare" />
-      </header>
+      <NativeShare v-if="hasNativeShare" />
     </div>
+
     <LocationSearch />
   </main>
 </template>
@@ -58,20 +57,16 @@ main {
     padding-right: 16px;
   }
 
-  @include mobile-large {
+  @include mobile-large(down) {
     padding: 0;
     flex-flow: column nowrap;
-  }
-
-  @include mobile-large {
-    padding: 0;
   }
 
   h1 {
     margin: 0;
     text-align: left;
 
-    @include mobile-large {
+    @include mobile-large(down) {
       margin: 15px 0;
       text-align: center;
     }
@@ -80,7 +75,7 @@ main {
   p {
     font-size: 18px;
 
-    @include mobile-large {
+    @include mobile-large(down) {
       text-align: center;
     }
   }
@@ -88,8 +83,9 @@ main {
   .info-section {
     width: 100%;
     box-sizing: border-box;
+    padding: 8px;
 
-    @include mobile-large {
+    @include mobile-large(down) {
       &:first-child {
         padding: 0 8px;
       }
