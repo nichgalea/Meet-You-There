@@ -21,10 +21,20 @@ export default class App extends Vue {}
 
 * {
   outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   margin: 0;
+}
+
+a {
+  color: $secondary;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 #app {

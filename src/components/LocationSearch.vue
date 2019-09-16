@@ -1,20 +1,26 @@
 <template>
   <div class="location-search">
-    <MyLocation />
-    <FriendsLocation />
+    <MyLocation @result="myCurrentLocation = $event" />
+    <FriendsLocation @results="friendCurrentLocation = $event" />
+
     <button class="submit-button">Show me bars!</button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import * as Opencage from "@/models/opencage";
 import MyLocation from "./MyLocation.vue";
 import FriendsLocation from "./FriendsLocation.vue";
 
 @Component({
   components: { MyLocation, FriendsLocation }
 })
-export default class LocationSearch extends Vue {}
+export default class LocationSearch extends Vue {
+  results: Opencage.Result[] | null = null;
+  myCurrentLocation: Opencage.Result | null = null;
+  friendCurrentLocation: Opencage.Result | null = null;
+}
 </script>
 
 <style scoped lang="scss">

@@ -7,8 +7,7 @@ export enum LocationServiceError {
   GEO_LOCATION_UNSUPPORTED,
   GEO_LOCATION_TIMEOUT
 }
-const OPEN_CAGE_URL = "https://api.opencagedata.com/";
-
+const OPEN_CAGE_URL = "https://api.opencagedata.com";
 export class LocationService {
   async getCurrentLocationCoordinates(): Promise<Location.Coordinates> {
     if (!navigator.geolocation) return Promise.reject(LocationServiceError.GEO_LOCATION_UNSUPPORTED);
@@ -32,22 +31,14 @@ export class LocationService {
     return { longitude, latitude };
   }
 
-  async getLocationNameByCoordinates(coord: Location.Coordinates): Promise<OpenCage.Result[]> {
+  async getLocationResultsByQuery(query: string): Promise<OpenCage.Result[]> {
     const url = new URL(`${OPEN_CAGE_URL}/geocode/v1/json`);
-    url.searchParams.append("q", `${coord.latitude},${coord.longitude}`);
+    url.searchParams.append("q", query);
     url.searchParams.append("key", process.env.VUE_APP_OPEN_CAGE_API_SECRET);
     url.searchParams.append("language", "en");
 
-    return httpService.get<OpenCage.Result[]>(url.toString());
-  }
-
-  async getCoordinatesByLocationName(name: string): Promise<OpenCage.Result[]> {
-    const url = new URL(`${OPEN_CAGE_URL}/geocode/v1/json`);
-    url.searchParams.append("q", name);
-    url.searchParams.append("key", process.env.VUE_APP_OPEN_CAGE_API_SECRET);
-    url.searchParams.append("language", "en");
-
-    return httpService.get<OpenCage.Result[]>(url.toString());
+    const response = await httpService.get<OpenCage.LookupResponse>(url.toString());
+    return response.results;
   }
 
   checkIsCoordinates(input: string): boolean {

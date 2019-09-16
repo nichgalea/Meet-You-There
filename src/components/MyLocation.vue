@@ -8,23 +8,100 @@
     </p>
 
     <div class="input-section">
-      <Searchfield placeholder="Where are your right now?" />
+      <Searchfield placeholder="Where are you right now?" @search="handleSearch" v-model="value" />
     </div>
 
-    <button class="find-me">Find Me!</button>
+    <p v-if="loading" class="loading">Loading...</p>
+
+    <p v-if="error" class="error">{{error}}</p>
+
+    <p v-if="currentLocation" class="current-location">
+      Your current location:
+      <br />
+      <b>{{`${currentLocation.formatted} ${currentLocation.annotations.flag || ""}`}}</b>
+    </p>
+    <p v-else>We don't have your location yet...</p>
+
+    <button class="find-me" @click="findCurrentCoordinates">Find Me!</button>
+
+    <LocationResults v-if="results" :results="results" @close="handleResultsClose" />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import * as Opencage from "@/models/opencage";
+import locationService from "@/services/location.service";
 import Searchfield from "./Searchfield.vue";
+import LocationResults from "./LocationResults.vue";
 
-@Component({ components: { Searchfield } })
+@Component({ components: { Searchfield, LocationResults } })
 export default class MyLocation extends Vue {
-  autoUsed = false;
+  currentLocation: Opencage.Result | null = null;
+  results: Opencage.Result[] | null = null;
+  value = "";
+  error = "";
+  loading = false;
 
-  handleSearch(value: string) {
-    console.log(value);
+  handleSearch() {
+    if (this.value.trim().length === 0) return;
+    this.fetchResults(this.value);
+  }
+
+  async findCurrentCoordinates() {
+    this.loading = true;
+
+    try {
+      const coords = await locationService.getCurrentLocationCoordinates();
+      this.fetchResults(`${coords.latitude}, ${coords.longitude}`);
+    } catch {
+      this.error =
+        "Couldn't get your location! Are location permissions enabled on this site?";
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async fetchResults(query: string) {
+    this.error = "";
+    this.loading = true;
+
+    try {
+      const results = await locationService.getLocationResultsByQuery(query);
+
+      switch (results.length) {
+        case 0: {
+          this.error =
+            "We couldn't find any locations for that query. Maybe you need to be a bit more specific?";
+          break;
+        }
+
+        case 1: {
+          this.currentLocation = results[0];
+          this.$emit("result", results[0]);
+          break;
+        }
+
+        default: {
+          this.results = results;
+          break;
+        }
+      }
+    } catch (e) {
+      this.error =
+        "Something went wrong when we were trying to pin-point your location!";
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  handleResultsClose(selectedLocation?: Opencage.Result) {
+    if (selectedLocation) {
+      this.currentLocation = selectedLocation;
+      this.$emit("result", selectedLocation);
+    }
+
+    this.results = null;
   }
 }
 </script>
@@ -42,8 +119,20 @@ export default class MyLocation extends Vue {
   }
 }
 
+.loading {
+  color: $secondary;
+}
+
+.error {
+  color: red;
+}
+
 .emphasis {
   font-weight: bolder;
+  color: $secondary;
+}
+
+.current-location > b {
   color: $secondary;
 }
 
