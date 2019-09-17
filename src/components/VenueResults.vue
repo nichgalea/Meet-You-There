@@ -41,7 +41,7 @@
             <td v-if="nativeShare">
               <NativeShare
                 title="MeetYouThere!"
-                :text="`Hey! I found this place, '${item.venue.name}' from  ${siteUrl}. It looks like a nice halfway-place for us to meet!`"
+                :text="`Hey! I found this place, '${item.venue.name}' from  ${siteUrl}.\n\nIt looks like a nice halfway-place for us to meet!`"
                 :url="`https://www.google.com/maps/search/?api=1&query=${item.venue.location.lat},${item.venue.location.lng}`"
               />
             </td>
