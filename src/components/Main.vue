@@ -11,7 +11,7 @@
         <NativeShare
           title="MeetYouThere!"
           text="Hey! Let's meet halfway using this!"
-          label="Click to share with your friends!"
+          label="Click to share this site with your friends!"
           :url="siteUrl"
         />
       </p>
