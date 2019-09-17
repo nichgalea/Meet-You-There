@@ -94,7 +94,7 @@ export default class FriendsLocation extends Vue {
   font-weight: 500;
 
   p {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     padding-left: 8px;
   }
 

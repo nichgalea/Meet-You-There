@@ -1,10 +1,15 @@
 <template>
   <div class="my-location">
     <p>
-      Start by first putting in your current location. You can click the
+      Start by first putting in your current location, then
       <span
         class="emphasis"
-      >Find Me!</span> button to find it automatically.
+      >press the search button or hit Enter &crarr; to search</span>.
+    </p>
+
+    <p>
+      You can click the
+      <span class="emphasis">Find Me!</span> button to find it automatically (you don't need hit search otherwise).
     </p>
 
     <div class="input-section">
@@ -114,7 +119,7 @@ export default class MyLocation extends Vue {
   font-weight: 500;
 
   p {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     padding-left: 8px;
   }
 }
