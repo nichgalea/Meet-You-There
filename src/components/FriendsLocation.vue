@@ -57,7 +57,7 @@ export default class FriendsLocation extends Vue {
 
         case 1: {
           this.currentLocation = results[0];
-          this.$emit("result", results[0]);
+          this.$emit("friend-location", results[0]);
           break;
         }
 
@@ -77,7 +77,7 @@ export default class FriendsLocation extends Vue {
   handleResultsClose(selectedLocation?: OpenCage.Result) {
     if (selectedLocation) {
       this.currentLocation = selectedLocation;
-      this.$emit("result", selectedLocation);
+      this.$emit("friend-location", selectedLocation);
     }
 
     this.results = null;
@@ -90,7 +90,7 @@ export default class FriendsLocation extends Vue {
 @import "@/styles/mixins";
 
 .friends-location {
-  margin-top: 24px;
+  margin-top: 48px;
   font-weight: 500;
 
   p {

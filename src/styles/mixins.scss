@@ -69,7 +69,15 @@
   }
 
   &:active {
-    background: darken($bg-color, 5%);
+    &:not(:disabled) {
+      background: darken($bg-color, 5%);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
   }
 }
 

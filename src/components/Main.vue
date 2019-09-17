@@ -7,7 +7,14 @@
 
       <p>Search by address, landmark or even GPS coordinates.</p>
 
-      <NativeShare v-if="hasNativeShare" />
+      <p v-if="hasNativeShare">
+        <NativeShare
+          title="MeetYouThere!"
+          text="Hey! Let's meet halfway using this!"
+          label="Click to share with your friends!"
+          :url="siteUrl"
+        />
+      </p>
     </div>
 
     <LocationSearch />
@@ -27,6 +34,7 @@ import NativeShare from "./NativeShare.vue";
 })
 export default class Main extends Vue {
   hasNativeShare = Boolean(navigator.share);
+  siteUrl = window.location.href;
 }
 </script>
 
@@ -42,10 +50,6 @@ main {
   display: flex;
   flex-flow: row nowrap;
   padding: 60px 0;
-
-  h1 {
-    color: $primary;
-  }
 
   @include desktop {
     padding-left: 16px;
@@ -65,6 +69,7 @@ main {
   h1 {
     margin: 0;
     text-align: left;
+    color: $primary;
 
     @include mobile-large(down) {
       margin: 15px 0;
@@ -81,7 +86,6 @@ main {
   }
 
   .info-section {
-    width: 100%;
     box-sizing: border-box;
     padding: 8px;
 

@@ -1,5 +1,5 @@
 <template>
-  <div @click="handleShare" class="native-share">
+  <span @click="handleShare" class="native-share">
     <button class="share-button" title="Click to share!">
       <svg width="24" height="24">
         <path
@@ -7,23 +7,28 @@
         />
       </svg>
     </button>
-    <span>Click to share with friends!</span>
-  </div>
+    <span class="label" v-if="label">{{label}}</span>
+  </span>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class NativeShare extends Vue {
+  @Prop({ type: String, default: "" }) title!: string;
+  @Prop({ type: String, default: "" }) text!: string;
+  @Prop({ type: String, default: "" }) url!: string;
+  @Prop({ type: String, default: "" }) label!: string;
+
   handleShare() {
     if (navigator.share) {
-      // leverage native share on phones!
+      // native share on phones!
       // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
       navigator.share({
-        title: "MeetYouThere!",
-        text: "Hey! Let's meet halfway using this!",
-        url: window.location.href
+        title: this.title,
+        text: this.text,
+        url: this.url
       });
     }
   }
@@ -35,8 +40,6 @@ export default class NativeShare extends Vue {
 
 .native-share {
   cursor: pointer;
-  display: flex;
-  align-items: center;
   user-select: none;
 
   svg {
@@ -44,12 +47,18 @@ export default class NativeShare extends Vue {
   }
 }
 
+.label {
+  vertical-align: middle;
+}
+
 .share-button {
+  background: none;
   appearance: none;
   height: 30px;
   width: 30px;
   padding: 0;
   border: 0;
   margin-right: 8px;
+  vertical-align: middle;
 }
 </style>

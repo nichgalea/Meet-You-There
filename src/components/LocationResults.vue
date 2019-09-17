@@ -1,5 +1,5 @@
 <template>
-  <div class="results">
+  <div class="results" @click.stop>
     <button class="close" @click="$emit('close')"></button>
     <div class="container">
       <div>
@@ -29,6 +29,18 @@ import * as OpenCage from "@/models/opencage";
 @Component
 export default class ResultsModal extends Vue {
   @Prop() results!: OpenCage.Result[];
+
+  mounted() {
+    window.addEventListener("click", this.handleOutsideClick);
+  }
+
+  destroyed() {
+    window.removeEventListener("click", this.handleOutsideClick);
+  }
+
+  handleOutsideClick() {
+    this.$emit("close");
+  }
 }
 </script>
 
@@ -88,7 +100,7 @@ export default class ResultsModal extends Vue {
 
     &:hover {
       td {
-        background: $background-light;
+        background: $background;
       }
     }
   }

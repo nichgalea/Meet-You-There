@@ -78,7 +78,7 @@ export default class MyLocation extends Vue {
 
         case 1: {
           this.currentLocation = results[0];
-          this.$emit("result", results[0]);
+          this.$emit("my-location", results[0]);
           break;
         }
 
@@ -98,7 +98,7 @@ export default class MyLocation extends Vue {
   handleResultsClose(selectedLocation?: OpenCage.Result) {
     if (selectedLocation) {
       this.currentLocation = selectedLocation;
-      this.$emit("result", selectedLocation);
+      this.$emit("my-location", selectedLocation);
     }
 
     this.results = null;
