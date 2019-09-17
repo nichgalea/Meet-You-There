@@ -18,6 +18,8 @@ However, the math isn't that straightforward, even though I can still convert it
 
 With a bit of effort I managed to find this library: https://github.com/Turfjs/turf. Which seems to have decent support and relatively recent activity. Through its documentation it seems quite straightforward to use, at least for my needs for sure.
 
+## Environment Variables
+
 This requires 3 environment variables to be able to work:
 
 - `VUE_APP_FOURSQUARE_ID` - Foursquare's API Client ID
