@@ -2,6 +2,8 @@
   <div class="venue-results">
     <h2>Results</h2>
 
+    <button class="reset-button" @click="$emit('reset')">Click here to Reset!</button>
+
     <p>
       Midpoint between both locations:
       <span class="midpoint">
@@ -118,5 +120,11 @@ th {
 .midpoint {
   color: $secondary;
   font-weight: bolder;
+}
+
+.reset-button {
+  @include button;
+  display: block;
+  margin: 0 0 8px auto;
 }
 </style>
