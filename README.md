@@ -6,7 +6,7 @@ Given two locations (one can be found using the browser geolocation API), this w
 
 The application is fully responsive and supports all last 2 versions of major browsers. I recommend using it on mobile in order to also see the use of the `navigator.share` ([info here](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share)) browser API.
 
-The locations are geo-coded through [OpenCage Geocoder](https://opencagedata.com/), the mid-point between the two coordinates is then found using [TurfJS](https://github.com/Turfjs/turf) (the calculation is linear and does not account for water or other impossible geographic terrain), and a list of suggested venues close to the calculated mid-point coordinate is found using [Foursquare's Places API](https://developer.foursquare.com/places-api).
+The locations are geo-coded through [OpenCage Geocoder](https://opencagedata.com/), the mid-point between the two coordinates is then found using [TurfJS](https://github.com/Turfjs/turf) (the calculation is linear and does not account for water or other impossible geographic terrain), and a list of suggested venues close to the calculated mid-point coordinate is found using [Foursquare's Places API](https://developer.foursquare.com/places-api). The Foursquare API will automatically calculate the radius within which it suggests venues **based on the density of available venues in that area.** [More info on this here.](https://developer.foursquare.com/docs/api/venues/search)
 
 ## Finding the midpoint between two geographical coordinates
 
