@@ -14,8 +14,10 @@
       </span>
       <br />
       <br />
-      Showing {{recommendations.length}} result{{recommendations.length === 1 ? "" : "s"}} found within a {{radius | distance}} radius of the midpoint. This radius is automatically chosen by the Foursquare API based on density of venues in the area.
+      Showing {{recommendations.length}} result{{recommendations.length === 1 ? "" : "s"}} found within a {{radius | distance}} radius of the midpoint. This radius is automatically chosen based on density of venues in the area.
     </p>
+
+    <p>You can click the venue names to open their location on Google Maps!</p>
 
     <div class="table-section">
       <table>
@@ -113,7 +115,7 @@ td {
 th {
   padding: 8px;
   text-align: left;
-  color: $secondary;
+  color: $text-primary;
   font-weight: bolder;
 }
 

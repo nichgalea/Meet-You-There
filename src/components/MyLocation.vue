@@ -2,19 +2,21 @@
   <div class="my-location">
     <p>
       Start by first putting in your current location, then
-      <span
-        class="emphasis"
-      >press the search button or hit Enter &crarr; to search</span>.
+      <b>press the search button or hit Enter &crarr; to search</b>.
     </p>
 
     <p>
       You can click the
-      <span class="emphasis">Find Me!</span> button to find it automatically (you don't need hit search otherwise).
+      <b>Find Me!</b> button to find it automatically (you don't need hit search otherwise).
     </p>
 
     <div class="input-section">
       <Searchfield placeholder="Where are you right now?" @search="handleSearch" v-model="value" />
     </div>
+
+    <p class="or">OR</p>
+
+    <button class="find-me" @click="findCurrentCoordinates">Find Me!</button>
 
     <p v-if="loading" class="loading">Loading...</p>
 
@@ -26,8 +28,6 @@
       <b>{{`${currentLocation.formatted} ${currentLocation.annotations.flag || ""}`}}</b>
     </p>
     <p v-else class="current-location">We don't have your location yet...</p>
-
-    <button class="find-me" @click="findCurrentCoordinates">Find Me!</button>
 
     <LocationResults v-if="results" :results="results" @close="handleResultsClose" />
   </div>
@@ -132,11 +132,6 @@ export default class MyLocation extends Vue {
   color: red;
 }
 
-.emphasis {
-  font-weight: bolder;
-  color: $secondary;
-}
-
 .current-location > b {
   color: $secondary;
 }
@@ -153,6 +148,19 @@ export default class MyLocation extends Vue {
 
   @include tablet(up) {
     width: 200px;
+  }
+}
+
+.or {
+  letter-spacing: 2px;
+
+  @include tablet(up) {
+    padding-right: 88px;
+    text-align: right;
+  }
+
+  @include mobile-large(down) {
+    text-align: center;
   }
 }
 </style>
