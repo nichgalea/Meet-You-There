@@ -17,7 +17,7 @@
       Showing {{recommendations.length}} result{{recommendations.length === 1 ? "" : "s"}} found within a {{radius | distance}} radius of the midpoint. This radius is automatically chosen based on density of venues in the area.
     </p>
 
-    <p>You can click the venue names to open their location on Google Maps!</p>
+    <p>You can click the venue names and addresses to open their location and directions to them respectively on Google Maps!</p>
 
     <div class="table-section">
       <table>
@@ -33,16 +33,23 @@
           <tr v-for="item of recommendations" :key="item.venue.id">
             <td>
               <a
-                :href="`https://www.google.com/maps/search/?api=1&query=${item.venue.location.lat},${item.venue.location.lng}`"
+                :href="`https://www.google.com/maps/search/?api=1&query=${item.venue.name}%20${item.venue.location.formattedAddress.join(', ')}`"
                 target="_blank"
               >{{item.venue.name}}</a>
             </td>
-            <td>{{item.venue.location.formattedAddress.join(", ")}}</td>
+
+            <td>
+              <a
+                :href="`https://www.google.com/maps/dir/?api=1&destination=${item.venue.name}%20${item.venue.location.formattedAddress.join(', ')}`"
+                target="_blank"
+              >{{item.venue.location.formattedAddress.join(", ")}}</a>
+            </td>
+
             <td v-if="nativeShare">
               <NativeShare
                 title="MeetYouThere!"
                 :text="`Hey! I found this place, '${item.venue.name}' from  ${siteUrl}.\n\nIt looks like a nice halfway-place for us to meet!`"
-                :url="`https://www.google.com/maps/search/?api=1&query=${item.venue.location.lat},${item.venue.location.lng}`"
+                :url="`https://www.google.com/maps/search/?api=1&query=${item.venue.name}%20${item.venue.location.formattedAddress.join(', ')}`"
               />
             </td>
           </tr>
@@ -99,8 +106,6 @@ table {
 }
 
 tr {
-  cursor: pointer;
-
   &:nth-child(odd) {
     td {
       background: white;
