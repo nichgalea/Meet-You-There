@@ -28,7 +28,7 @@ This requires 3 environment variables to be able to work:
 
 These can be injected in the app through an `.env` or `.env.local` file. There is an `.env.sample` in the project that can be renamed and the values can be changed there.
 
-It is important that the variables start with the prefix `VUE_APP_`, otherwise they won't be picked up by the build and injected intp the app through Webpack's `DefinePlugin` feature. [More info about this here.](https://cli.vuejs.org/guide/mode-and-env.html#environment-variables)
+It is important that the variables start with the prefix `VUE_APP_`, otherwise they won't be picked up by the build and injected into the app through Webpack's `DefinePlugin` feature. [More info about this here.](https://cli.vuejs.org/guide/mode-and-env.html#environment-variables)
 
 ## Project setup
 
